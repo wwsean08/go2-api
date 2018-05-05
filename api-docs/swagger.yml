@@ -1,0 +1,72 @@
+---
+openapi: "3.0.0"
+info:
+  version: "1.0"
+  title: go2 api
+  license:
+    name: "Apache 2.0"
+    url: "http://www.apache.org/licenses/LICENSE-2.0.html"
+
+paths:
+  /add:
+    post:
+      summary: Add a new URL/Keyword to the database
+      operationId: foo
+      responses:
+        '200':
+          description: The URL/Keyword were added to the database succesfuly
+        '409':
+          description: A conflict occurred when trying to add the URL/Keyword
+
+  /keyword/get/{keyword}:
+    get:
+      summary: Gets a keyword with all it's associated metadata
+      operationId: get-keyword
+      parameters:
+        - name: keyword
+          description: The keyword you wish to retrieve
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Keyword successfuly retrieved
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Keyword'
+        '404':
+          description: The keyword does not exist
+
+
+components:
+  schemas:
+    Keyword:
+      required:
+        - id
+        - keyword
+      properties:
+        id:
+          type: integer
+          format: int64
+        keyword:
+          type: string
+    Keywords:
+      type: array
+      items:
+        $ref: "#/components/schemas/Keyword"
+    URL:
+      required:
+        - id
+        - url
+      properties:
+        id:
+          type: integer
+          format: int64
+        url:
+          type: string
+    URLs:
+      type: array
+      items:
+        $ref: "#/components/schemas/URL"
