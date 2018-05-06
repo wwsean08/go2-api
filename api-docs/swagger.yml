@@ -1,5 +1,5 @@
 ---
-openapi: "3.0.0"
+swagger: "2.0"
 info:
   version: "1.0"
   title: go2 api
@@ -7,28 +7,28 @@ info:
     name: "Apache 2.0"
     url: "http://www.apache.org/licenses/LICENSE-2.0.html"
 
+basePath: "/api/v1"
+
 paths:
   /health:
     get:
       summary: Healthcheck endpoint for the service
-      operationId: healthcheck
+      produces:
+        - application/json
       responses:
         '200':
           description: The service and dependencies are healthy
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Health'
+          schema:
+            $ref: '#/definitions/Health'
         default:
           description: healthcheck error
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Error"
+          schema:
+            $ref: "#/definitions/Error"
   /add:
     post:
       summary: Add a new URL/Keyword to the database
-      operationId: add-keyword-url
+      produces:
+        - application/json
       responses:
         '200':
           description: The URL/Keyword were added to the database succesfuly
@@ -36,175 +36,161 @@ paths:
           description: A conflict occurred when trying to add the URL/Keyword
         default:
           description: unexpected error
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Error"
+          schema:
+            $ref: "#/definitions/Error"
 
   /keyword:
     get:
       summary: Gets an array of keywords
-      operationId: get-keywords
+      produces:
+        - application/json
       responses:
         '200':
           description: Keywords successfuly retrieved
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Keywords"
+          schema:
+            $ref: "#/definitions/Keywords"
         default:
           description: unexpected error
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Error"
+          schema:
+            $ref: "#/definitions/Error"
   /keyword/{keyword}:
     get:
       summary: Gets a keyword with all it's associated metadata
-      operationId: get-keyword
+      produces:
+        - application/json
       parameters:
         - name: keyword
-          description: The keyword you wish to retrieve
           in: path
+          description: The keyword you wish to retrieve
           required: true
-          schema:
-            type: string
+          type: string
       responses:
         '200':
           description: Keyword successfuly retrieved
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Keyword'
+          schema:
+            $ref: '#/definitions/Keyword'
         '404':
           description: The keyword does not exist
         default:
           description: unexpected error
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Error"
+          schema:
+            $ref: "#/definitions/Error"
   /url/{urlid}:
     get:
       summary: Get the URLs associated with a keyword
-      operationId: get-urls-for-keyword
+      produces:
+        - application/json
       parameters:
         - name: urlid
-          description: The ID of the URL to retrieve data on
           in: path
+          description: The id of the url you wish to retrieve
           required: true
-          schema:
-            type: integer
-            format: int64
+          type: integer
+          format: int64
       responses:
         '200':
           description: URLs successfuly retrieved
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/URL'
+          schema:
+            $ref: '#/definitions/URL'
         '404':
           description: The keyword does not exist
         default:
           description: unexpected error
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Error"
+          schema:
+            $ref: "#/definitions/Error"
 # TODO: Figure out updates
-components:
-  schemas:
-    Keyword:
-      description: A Keyword object with all it's associated metadata
-      required:
-        - id
-        - keyword
-      properties:
-        id:
-          type: integer
-          format: int64
-        keyword:
-          type: string
-        urls:
-          type: array
-          description: URLs associated with this keyword
-          items:
-            $ref: "#/components/schemas/URL"
-        result-mode:
-          type: integer
-          description: The result mode for this keyword
-          format: int64
-        is-regex:
-          type: boolean
-          description: If the keyword should be searched for as a regex
-        click-count:
-          type: integer
-          description: The number of clicks across all URLs ever associated with it
-          format: int64
-        last-clicked:
-          type: string
-          description: The date/time the keyword was last used
-    Keywords:
-      type: array
-      items:
-        $ref: "#/components/schemas/Keyword"
-    URL:
-      description: a URL object with all it's metadata
-      required:
-        - id
-        - url
-      properties:
-        id:
-          type: integer
-          format: int64
-        url:
-          type: string
-        click-count:
-          type: integer
-          description: The number of clicks for the URL
-          format: int64
-        last-clicked:
-          type: string
-          description: The date/time the URL was last used
-        history:
-          type: array
-          description: The history of changes for a URL
-          items:
-            $ref: "#/components/schemas/URL-History"
-    URL-History:
-      description: A history object for a change to a URL
-      required:
-        - id
-        - username
-      properties:
-        id:
-          type: integer
-          format: int64
-        username:
-          type: string
-          description: The user that made this change
-        change-time:
-          type: string
-          description: When this change was made
-        change-type:
-          type: string
-          description: What type of change was made
-    Health:
-      properties:
-        memory-usage:
-          type: integer
-          format: int64
-        app-version:
-          type: string
-        db-version:
-          type: string
-    Error:
-      required:
-        - code
-        - message
-      properties:
-        code:
-          type: integer
-          format: int32
-        message:
-          type: string
+definitions:
+  Keyword:
+    description: A Keyword object with all it's associated metadata
+    required:
+      - id
+      - keyword
+    properties:
+      id:
+        type: integer
+        format: int64
+      keyword:
+        type: string
+      urls:
+        type: array
+        description: URLs associated with this keyword
+        items:
+          $ref: "#/definitions/URL"
+      result-mode:
+        type: integer
+        description: The result mode for this keyword
+        format: int64
+      is-regex:
+        type: boolean
+        description: If the keyword should be searched for as a regex
+      click-count:
+        type: integer
+        description: The number of clicks across all URLs ever associated with it
+        format: int64
+      last-clicked:
+        type: string
+        description: The date/time the keyword was last used
+  Keywords:
+    type: array
+    items:
+      $ref: "#/definitions/Keyword"
+  URL:
+    description: a URL object with all it's metadata
+    required:
+      - id
+      - url
+    properties:
+      id:
+        type: integer
+        format: int64
+      url:
+        type: string
+      click-count:
+        type: integer
+        description: The number of clicks for the URL
+        format: int64
+      last-clicked:
+        type: string
+        description: The date/time the URL was last used
+      history:
+        type: array
+        description: The history of changes for a URL
+        items:
+          $ref: "#/definitions/URL-History"
+  URL-History:
+    description: A history object for a change to a URL
+    required:
+      - id
+      - username
+    properties:
+      id:
+        type: integer
+        format: int64
+      username:
+        type: string
+        description: The user that made this change
+      change-time:
+        type: string
+        description: When this change was made
+      change-type:
+        type: string
+        description: What type of change was made
+  Health:
+    properties:
+      memory-usage:
+        type: integer
+        format: int64
+      app-version:
+        type: string
+      db-version:
+        type: string
+  Error:
+    required:
+      - code
+      - message
+    properties:
+      code:
+        type: integer
+        format: int32
+      message:
+        type: string
