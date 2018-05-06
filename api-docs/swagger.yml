@@ -1,13 +1,13 @@
 ---
-swagger: "2.0"
+swagger: '2.0'
 info:
-  version: "1.0"
+  version: '1.0'
   title: go2 api
   license:
-    name: "Apache 2.0"
-    url: "http://www.apache.org/licenses/LICENSE-2.0.html"
+    name: 'Apache 2.0'
+    url: 'http://www.apache.org/licenses/LICENSE-2.0.html'
 
-basePath: "/api/v1"
+basePath: '/api/v1'
 
 paths:
   /health:
@@ -23,21 +23,21 @@ paths:
         default:
           description: healthcheck error
           schema:
-            $ref: "#/definitions/Error"
+            $ref: '#/definitions/Error'
   /add:
     post:
       summary: Add a new URL/Keyword to the database
       produces:
         - application/json
       responses:
-        '200':
+        '201':
           description: The URL/Keyword were added to the database succesfuly
         '409':
           description: A conflict occurred when trying to add the URL/Keyword
         default:
           description: unexpected error
           schema:
-            $ref: "#/definitions/Error"
+            $ref: '#/definitions/Error'
 
   /keyword:
     get:
@@ -48,11 +48,11 @@ paths:
         '200':
           description: Keywords successfuly retrieved
           schema:
-            $ref: "#/definitions/Keywords"
+            $ref: '#/definitions/Keywords'
         default:
           description: unexpected error
           schema:
-            $ref: "#/definitions/Error"
+            $ref: '#/definitions/Error'
   /keyword/{keyword}:
     get:
       summary: Gets a keyword with all it's associated metadata
@@ -74,7 +74,7 @@ paths:
         default:
           description: unexpected error
           schema:
-            $ref: "#/definitions/Error"
+            $ref: '#/definitions/Error'
   /url/{urlid}:
     get:
       summary: Get the URLs associated with a keyword
@@ -97,7 +97,7 @@ paths:
         default:
           description: unexpected error
           schema:
-            $ref: "#/definitions/Error"
+            $ref: '#/definitions/Error'
 # TODO: Figure out updates
 definitions:
   Keyword:
@@ -115,7 +115,7 @@ definitions:
         type: array
         description: URLs associated with this keyword
         items:
-          $ref: "#/definitions/URL"
+          $ref: '#/definitions/URL'
       result-mode:
         type: integer
         description: The result mode for this keyword
@@ -133,7 +133,7 @@ definitions:
   Keywords:
     type: array
     items:
-      $ref: "#/definitions/Keyword"
+      $ref: '#/definitions/Keyword'
   URL:
     description: a URL object with all it's metadata
     required:
@@ -156,7 +156,7 @@ definitions:
         type: array
         description: The history of changes for a URL
         items:
-          $ref: "#/definitions/URL-History"
+          $ref: '#/definitions/URL-History'
   URL-History:
     description: A history object for a change to a URL
     required:
